@@ -3,14 +3,17 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
-var val = 0
-
 func sayHello(w http.ResponseWriter, r *http.Request) {
-	_, _ = fmt.Fprintln(w, "<h1>Hello World</h1>")
-	val += 1
-	fmt.Printf("%d", val)
+	// 读取某txt文件内容并渲染
+	// b, _ := ioutil.ReadFile("./hello.txt") 旧版本的ioutil已经被os.ReadFile取代了
+	b, err := os.ReadFile("./hello.txt")
+	if err != nil {
+		fmt.Printf("txt is error,err:%v\n", err)
+	}
+	_, _ = fmt.Fprintln(w, string(b))
 }
 
 func main() {
