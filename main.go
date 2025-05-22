@@ -1,26 +1,19 @@
 package main
 
-import (
-	"fmt"
-	"net/http"
-	"os"
-)
-
-func sayHello(w http.ResponseWriter, r *http.Request) {
-	// 读取某txt文件内容并渲染
-	// b, _ := ioutil.ReadFile("./hello.txt") 旧版本的ioutil已经被os.ReadFile取代了
-	b, err := os.ReadFile("./hello.txt")
-	if err != nil {
-		fmt.Printf("txt is error,err:%v\n", err)
-	}
-	_, _ = fmt.Fprintln(w, string(b))
-}
+import "github.com/gin-gonic/gin"
 
 func main() {
-	http.HandleFunc("/hello", sayHello)
-	err := http.ListenAndServe(":9090", nil)
+	// 创建一个默认的路由引擎
+	router := gin.Default()
+	// get请求,路径ping
+	// 响应json 状态码200
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	err := router.Run()
 	if err != nil {
-		fmt.Printf("http server faild,err:%v\n", err)
 		return
-	}
+	} // 监听并在 0.0.0.0:8080 上启动服务
 }
