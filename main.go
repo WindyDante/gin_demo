@@ -1,19 +1,35 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"strings"
+)
 
-func main() {
-	// 创建一个默认的路由引擎
-	router := gin.Default()
-	// get请求,路径ping
-	// 响应json 状态码200
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	err := router.Run()
+func sayHelloName(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm() // 解析参数
+	if err != nil {
+		fmt.Println("ParseForm err:", err)
+	}
+	for k, v := range r.Form {
+		// 遍历get请求的参数
+		fmt.Println("key:", k)
+		// value是一个切片,通过strings方法组成一个字符串返回
+		fmt.Println("val:", strings.Join(v, " "))
+	}
+	_, err = fmt.Fprintf(w, "Hello EastWind!")
 	if err != nil {
 		return
-	} // 监听并在 0.0.0.0:8080 上启动服务
+	}
+}
+
+func main() {
+	// 拦截器的方法
+	http.HandleFunc("/", sayHelloName)
+	// 监听端口
+	err := http.ListenAndServe(":9090", nil)
+	if err != nil {
+		log.Fatalln("ListenAndServe err:", err)
+	}
 }
