@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"strings"
@@ -24,9 +25,32 @@ func sayHelloName(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func login(w http.ResponseWriter, r *http.Request) {
+	// 获取请求的方法
+	fmt.Println("method:", r.Method)
+	if r.Method == "GET" {
+		// 解析gtpl模版
+		t, _ := template.ParseFiles("login.gtpl")
+		log.Println(t.Execute(w, nil))
+	} else {
+		// 解析表单参数
+		err := r.ParseForm()
+		if err != nil {
+			log.Fatalln("ParseForm err:", err)
+		}
+		// 循环遍历表单
+		for k, v := range r.Form {
+			// 如果存在表单携带了多个参数，会返回一个切片
+			fmt.Println("key:", k)
+			fmt.Println("val:", strings.Join(v, " "))
+		}
+	}
+}
+
 func main() {
 	// 拦截器的方法
 	http.HandleFunc("/", sayHelloName)
+	http.HandleFunc("/login", login)
 	// 监听端口
 	err := http.ListenAndServe(":9090", nil)
 	if err != nil {
