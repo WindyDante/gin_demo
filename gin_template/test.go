@@ -1,41 +1,26 @@
 package main
 
 import (
-	"fmt"
-	"html/template"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	Name   string
-	Gender string
-	Age    int
-}
-
-func checkErr(err error) {
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-}
-
-func sayHello(w http.ResponseWriter, r *http.Request) {
-	// 解析指定文件生成模版对象
-	tmpl, err := template.ParseFiles("./hello.tmpl")
-	checkErr(err)
-	// 利用给定数据渲染模版
-	user := User{
-		Name:   "windEast",
-		Gender: "男",
-		Age:    18,
-	}
-	// 传入obj val
-	err = tmpl.Execute(w, user)
-	checkErr(err)
-}
-
 func main() {
-	http.HandleFunc("/", sayHello)
-	err := http.ListenAndServe(":9090", nil)
-	checkErr(err)
+	r := gin.Default()
+	// Glob是通配符模式
+	r.LoadHTMLGlob("**/*.html")
+	r.GET("/posts/index", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "posts/index.html", gin.H{
+			"title": "Posts Index",
+		})
+	})
+
+	r.GET("/users/index", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "users/index.html", gin.H{
+			"title": "Users Index",
+		})
+	})
+
+	r.Run(":8080")
 }
