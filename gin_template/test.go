@@ -6,6 +6,12 @@ import (
 	"net/http"
 )
 
+type User struct {
+	Name   string
+	Gender string
+	Age    int
+}
+
 func checkErr(err error) {
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -18,7 +24,13 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("./hello.tmpl")
 	checkErr(err)
 	// 利用给定数据渲染模版
-	err = tmpl.Execute(w, "windEast")
+	user := User{
+		Name:   "windEast",
+		Gender: "男",
+		Age:    18,
+	}
+	// 传入obj val
+	err = tmpl.Execute(w, user)
 	checkErr(err)
 }
 
