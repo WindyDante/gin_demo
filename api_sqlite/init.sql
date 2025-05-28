@@ -1,14 +1,13 @@
 CREATE TABLE `userinfo` (
-                            `uid` INT(10) NOT NULL AUTO_INCREMENT,
-                            `username` VARCHAR(64) NULL DEFAULT NULL,
-                            `department` VARCHAR(64) NULL DEFAULT NULL,
-                            `created` DATE NULL DEFAULT NULL,
-                            PRIMARY KEY (`uid`)
+                            `uid` INTEGER PRIMARY KEY AUTOINCREMENT,
+                            `username` VARCHAR(64) NULL,
+                            `department` VARCHAR(64) NULL,
+                            `created` DATE NULL
 );
 
 CREATE TABLE `userdetail` (
-                              `uid` INT(10) NOT NULL DEFAULT '0',
+                              `uid` INT(10) NULL,
                               `intro` TEXT NULL,
                               `profile` TEXT NULL,
                               PRIMARY KEY (`uid`)
-)
+);
